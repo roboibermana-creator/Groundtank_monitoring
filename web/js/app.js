@@ -366,9 +366,6 @@
 
   function notifySystem(sev, tag, title, msg) {
     if (!notifSupported || Notification.permission !== "granted") return;
-    // Kalau tab ini sedang aktif dilihat, toast di dalam web sudah cukup;
-    // notifikasi sistem diprioritaskan untuk saat operator sedang tidak menatap layar.
-    if (!document.hidden && document.hasFocus()) return;
     try {
       var n = new Notification("[" + tag + "] " + title, {
         body: msg,

@@ -4,7 +4,7 @@
   // ---------- Plant constants ----------
   var CAPACITY_L = 20000;
   var TANK_H_CM = 400;
-  var SENSOR_OFFSET_CM = 15; // jarak sensor ke muka air saat 100% (sesuai batas 15 cm di firmware)
+  var SENSOR_OFFSET_CM = 30; // jarak sensor ke muka air saat 100% (sensor 30 cm di atas bibir tangki, sama dengan config.h)
   var SP = { HH: 90, H: 70, L: 30, LL: 10 };
   var FLOAT_TRIP = 97;  // LSH-01 float switch
   var TICK_MS = 1000;
@@ -366,14 +366,21 @@
 
   function notifySystem(sev, tag, title, msg) {
     if (!notifSupported || Notification.permission !== "granted") return;
+    var opts = {
+      body: msg,
+      tag: "gt-scada-" + tag, // notifikasi tag sama akan menimpa yang lama, tidak menumpuk
+      renotify: true,
+      icon: NOTIF_ICON[sev] || NOTIF_ICON.ok,
+      silent: sev === "ok"
+    };
+    var ttl = "[" + tag + "] " + title;
     try {
-      var n = new Notification("[" + tag + "] " + title, {
-        body: msg,
-        tag: "gt-scada-" + tag, // notifikasi tag sama akan menimpa yang lama, tidak menumpuk
-        renotify: true,
-        icon: NOTIF_ICON[sev] || NOTIF_ICON.ok,
-        silent: sev === "ok"
-      });
+      // Android/PWA hanya mengizinkan lewat service worker
+      if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.ready.then(function (reg) { reg.showNotification(ttl, opts); });
+        return;
+      }
+      var n = new Notification(ttl, opts);
       n.onclick = function () { window.focus(); n.close(); };
     } catch (e) { /* beberapa browser menolak Notification() langsung, diabaikan */ }
   }
@@ -540,3 +547,7 @@
     el.addEventListener("click", function () { drawTrend(levelHistory); });
   });
 })();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+}

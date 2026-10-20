@@ -93,10 +93,10 @@
     ["ledEsp32", "ledEsp32b"].forEach(function (id) { setLed(id, ledCls); });
     var note = $("esp32Note");
     if (note) {
-      if (esp32State === "unset") note.textContent = "Belum diatur — isi URL & API key Supabase di js/supabase-config.js, dashboard masih pakai data simulasi.";
+      if (esp32State === "unset") note.textContent = "Belum diatur — isi URL & API key Supabase di js/supabase-config.js.";
       else if (esp32State === "online") note.textContent = "Data terakhir dari tabel " + CFG.table + ": " + esp32Detail + ".";
       else if (esp32State === "error") note.textContent = "Tidak bisa membaca tabel " + CFG.table + " di Supabase. Cek URL/API key di supabase-config.js dan pastikan supabase/schema.sql sudah dijalankan.";
-      else note.textContent = "Belum ada data baru dari ESP32" + (esp32Detail ? " (terakhir " + esp32Detail + ")" : "") + ". Dashboard sementara memakai data simulasi.";
+      else note.textContent = "Belum ada data baru dari ESP32" + (esp32Detail ? " (terakhir " + esp32Detail + ")" : "") + ". Menampilkan data terakhir yang diterima.";
     }
     var docNo = $("simDocNo");
     if (docNo) docNo.textContent = liveMode ? "DATA ASLI DARI SUPABASE" : "DATA DUMMY · BELUM TERHUBUNG SUPABASE";
@@ -107,6 +107,7 @@
   function applyLiveReading(row) {
     var L = row.level_percent != null ? Number(row.level_percent) :
       Math.max(0, Math.min(100, 100 - ((Number(row.distance_cm) - SENSOR_OFFSET_CM) / TANK_H_CM) * 100));
+    hasData = true;
     state.level = Math.max(0, Math.min(100, L));
     state.filling = !!row.pump_filling;
     render();
@@ -405,7 +406,8 @@
   // ---------- Process state ----------
   // filling  : mode pengisian dipilih operator
   // silenced : operator menekan MATIKAN ALARM untuk kejadian alarm saat ini
-  var state = { level: 48, filling: false, silenced: false };
+  var hasData = false; // false sampai pembacaan asli pertama dari Supabase diterima
+  var state = { level: 50, filling: false, silenced: false };
   var levelHistory = [];
   var lastCode = null;
 
@@ -496,6 +498,14 @@
     $("pidLsh").classList.toggle("alarm", floatTrip);
     $("pidBuzzer").classList.toggle("alarm-blink", buzzerOn);
 
+    if (!hasData) {
+      ["rLevel", "rDist", "kLevel", "kHeight", "kVol", "kFlow", "kUpd", "pidLevelTxt", "kvFlow", "pidFlowTxt"]
+        .forEach(function (id) { var el = $(id); if (el) el.textContent = "--"; });
+      $("rState").textContent = "TIDAK ADA DATA"; $("rState").className = "r-v r-state off";
+      $("siState").textContent = "TIDAK ADA DATA"; $("siState").className = "si-state off";
+      $("siDesc").textContent = "Menunggu data dari sensor (ESP32).";
+    }
+
     // sim widgets
     simLevel.value = Math.round(L);
     simLevelVal.textContent = Math.round(L) + " %";
@@ -524,26 +534,8 @@
     render();
   });
 
-  // ---------- Simulation tick ----------
-  // "Siklus otomatis" mensimulasikan operator yang menekan IDLE/PENGISIAN
-  // bergantian di batas atas & bawah, supaya data dummy terus bergerak
-  // selama tidak ada koneksi ESP32 nyata.
-  function tick() {
-    // Saat liveMode aktif, level/mode pengisian dipasok oleh checkEsp32() dari
-    // data Supabase, jadi loop simulasi dummy di sini dilewati.
-    if (!liveMode && simAuto.checked) {
-      if (state.filling && state.level >= 92) state.filling = false;
-      if (!state.filling && state.level <= 8) state.filling = true;
-      state.level += state.filling ? 1.1 : -0.55;
-      state.level = Math.max(0, Math.min(100, state.level));
-    }
-    if (!liveMode) { render(); sample(); }
-  }
-
-  for (var i = 0; i < 40; i++) levelHistory.push(48 + Math.sin(i / 7) * 1.5);
   render();
   drawTrend(levelHistory);
-  setInterval(tick, TICK_MS);
   window.addEventListener("resize", function () { drawTrend(levelHistory); });
   document.querySelectorAll('[data-go="dashboard"]').forEach(function (el) {
     el.addEventListener("click", function () { drawTrend(levelHistory); });

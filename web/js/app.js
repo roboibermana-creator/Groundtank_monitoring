@@ -3,7 +3,7 @@
 
   // ---------- Plant constants ----------
   var CAPACITY_L = 20000;
-  var TANK_H_CM = 400;
+  var TANK_H_CM = 180;
   var SENSOR_OFFSET_CM = 30; // jarak sensor ke muka air saat 100% (sensor 30 cm di atas bibir tangki, sama dengan config.h)
   var SP = { HH: 90, H: 70, L: 30, LL: 10 };
   var FLOAT_TRIP = 97;  // LSH-01 float switch

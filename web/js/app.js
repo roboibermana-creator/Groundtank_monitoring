@@ -5,7 +5,6 @@
   var TANK_H_CM = 180;
   var SENSOR_OFFSET_CM = 30; // jarak sensor ke muka air saat 100% (sensor 30 cm di atas bibir tangki, sama dengan config.h)
   var SP = { HH: 90, H: 70, L: 30, LL: 10 };
-  var FLOAT_TRIP = 97;  // LSH-01 float switch
   var TICK_MS = 1000;
   var HIST_LEN = 120;
 
@@ -111,6 +110,7 @@
     state.ts = new Date(row.created_at);
     state.level = Math.max(0, Math.min(100, L));
     state.filling = !!row.pump_filling;
+    state.float = !!row.float_switch;
     render();
     if (!stale) sample();
   }
@@ -168,6 +168,7 @@
   }
 
   var ALARM_DEF = {
+    FLOAT: { tag: "LSH-01", prio: 1, msg: "Float switch aktif, air benar-benar penuh" },
     HH: { tag: "LAHH-01", prio: 1, msg: "Level HIGH-HIGH saat pengisian" },
     H:  { tag: "LAH-01",  prio: 2, msg: "Level HIGH" },
     L:  { tag: "LAL-01",  prio: 2, msg: "Level LOW" },
@@ -409,7 +410,7 @@
   // filling  : mode pengisian dipilih operator
   // silenced : operator menekan MATIKAN ALARM untuk kejadian alarm saat ini
   var hasData = false; // false sampai pembacaan asli pertama dari Supabase diterima
-  var state = { stale: false, ts: null, level: 50, filling: false, silenced: false };
+  var state = { float: false, stale: false, ts: null, level: 50, filling: false, silenced: false };
   var levelHistory = [];
   var lastCode = null;
 
@@ -419,7 +420,10 @@
   var firstRender = true;
   function render() {
     var L = Math.max(0, Math.min(100, state.level));
-    var ev = evaluate(L, state.filling);
+    // Float switch (LSH-01) dipasang di atas bibir tangki, jadi aktif = air benar-benar penuh: peringatan kritis apa pun mode pengisiannya
+    var ev = state.float
+      ? { code: "FLOAT", sev: "crit", blink: true, text: "PENUH (FLOAT)", desc: "Float switch aktif, air benar-benar penuh. Hentikan pengisian." }
+      : evaluate(L, state.filling);
     if (ev.code !== lastCode) {
       state.silenced = false; // alarm baru -> buzzer aktif lagi
       onStateChange(ev.code);
@@ -431,7 +435,7 @@
       }
     }
     firstRender = false;
-    var floatTrip = L >= FLOAT_TRIP;
+    var floatTrip = state.float;
     var flow = state.filling && !state.stale ? 118 + Math.round(Math.sin(Date.now() / 1700) * 6) : 0;
     var dist = SENSOR_OFFSET_CM + TANK_H_CM * (1 - L / 100);
     var buzzerOn = ev.blink && !state.silenced;

@@ -19,7 +19,9 @@
     return e;
   }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
-  function hhmmss(d) { return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()); }
+  // Selalu WITA (Asia/Makassar, UTC+8) apa pun zona waktu perangkat
+  var WITA_FMT = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Makassar", hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  function hhmmss(d) { return WITA_FMT.format(d); }
 
   // ---------- Navigation ----------
   var screens = ["start", "dashboard", "pfd", "pid"];

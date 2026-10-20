@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=18">
+<link rel="stylesheet" href="css/style.css?v=19">
 </head>
 <body>
 
@@ -78,8 +78,8 @@
           <tr><th>Tag Tangki</th><td class="mono">TK-01</td></tr>
           <tr><th>Kapasitas</th><td class="mono">20.000 L</td></tr>
           <tr><th>Tinggi efektif</th><td class="mono">400 cm</td></tr>
-          <tr><th>Controller</th><td>ESP32 + W5500</td></tr>
-          <tr><th>Sensor level</th><td>A02YYUW, JSN-SR04T</td></tr>
+          <tr><th>Controller</th><td>ESP32-S3 + W5500</td></tr>
+          <tr><th>Sensor level</th><td>A02YYUW</td></tr>
           <tr><th>Backup</th><td>Float switch LSH-01</td></tr>
         </table>
       </div>
@@ -108,13 +108,11 @@
           <table class="data-tbl">
             <thead><tr><th>Tag</th><th>Komponen</th><th>Keterangan</th></tr></thead>
             <tbody>
-              <tr><td class="mono">MCU</td><td>ESP32 DevKit</td><td>Mikrokontroler utama, menjalankan seluruh logika alarm dan I/O</td></tr>
-              <tr><td class="mono">LT-01</td><td>Ultrasonik A02YYUW</td><td>Sensor level utama · UART, RX 22 / TX 21</td></tr>
-              <tr><td class="mono">LT-02</td><td>Ultrasonik JSN-SR04T</td><td>Sensor level cadangan · Trig 14 / Echo 13</td></tr>
-              <tr><td class="mono">LSH-01</td><td>Float switch</td><td>Interlock level tinggi backup · GPIO 27</td></tr>
-              <tr><td class="mono">NET-01</td><td>Modul Ethernet W5500</td><td>Koneksi jaringan kabel · CS 5, SCK 18, MISO 19, MOSI 23</td></tr>
-              <tr><td class="mono">HMI-L</td><td>LCD 16x2 I2C</td><td>Tampilan lokal di lokasi tangki · SDA 16, SCL 17</td></tr>
-              <tr><td class="mono">P-01</td><td>Relay pompa</td><td>GPIO 4</td></tr>
+              <tr><td class="mono">MCU</td><td>ESP32-S3 DevKitC-1</td><td>Mikrokontroler utama, menjalankan seluruh logika alarm dan I/O</td></tr>
+              <tr><td class="mono">LT-01</td><td>Ultrasonik A02YYUW</td><td>Sensor level utama · UART 9600 baud, RX GPIO 17</td></tr>
+              <tr><td class="mono">LSH-01</td><td>Float switch</td><td>Interlock level tinggi backup · GPIO 4</td></tr>
+              <tr><td class="mono">NET-01</td><td>Modul Ethernet W5500</td><td>Koneksi jaringan kabel · CS 10, SCK 12, MISO 13, MOSI 11, RST 5</td></tr>
+              <tr><td class="mono">HMI-L</td><td>LCD 16x2 I2C</td><td>Tampilan lokal di lokasi tangki · SDA 8, SCL 9</td></tr>
               <tr><td class="mono">XA-01</td><td>Buzzer</td><td>Alarm suara lokal · pin belum ditentukan</td></tr>
             </tbody>
           </table>
@@ -185,13 +183,13 @@
             <thead><tr><th>Tag</th><th>Deskripsi</th><th>Fungsi</th></tr></thead>
             <tbody>
               <tr><td class="mono">V-01</td><td>Manual valve inlet</td><td>Isolasi suplai sumber air</td></tr>
-              <tr><td class="mono">P-01</td><td>Pompa pengisian</td><td>Relay GPIO 4, dikontrol M-01</td></tr>
+              <tr><td class="mono">P-01</td><td>Pompa pengisian</td><td>Dioperasikan manual, tidak dikontrol M-01</td></tr>
               <tr><td class="mono">CV-01</td><td>Check valve</td><td>Mencegah aliran balik ke pompa</td></tr>
               <tr><td class="mono">FI-01</td><td>Flow indicator</td><td>Laju alir pengisian (opsional)</td></tr>
               <tr><td class="mono">TK-01</td><td>Ground tank</td><td>Penampung air, 20.000 L</td></tr>
               <tr><td class="mono">V-02</td><td>Manual valve outlet</td><td>Isolasi jalur distribusi</td></tr>
               <tr><td class="mono">LI-01</td><td>Level indicator</td><td>Sensor ultrasonik, ditampilkan di HMI</td></tr>
-              <tr><td class="mono">LSH-01</td><td>Level switch high</td><td>Float switch backup, GPIO 27</td></tr>
+              <tr><td class="mono">LSH-01</td><td>Level switch high</td><td>Float switch backup, GPIO 4</td></tr>
             </tbody>
           </table>
         </div>
@@ -214,8 +212,8 @@
             <rect class="ctrl-box" x="40" y="30" width="270" height="92"/>
             <line class="ctrl-div" x1="40" y1="54" x2="310" y2="54"/>
             <text class="ctrl-title" x="52" y="47">M-01 · LOCAL CONTROLLER</text>
-            <text class="ctrl-txt" x="52" y="74">ESP32 DevKit + W5500 Ethernet</text>
-            <text class="ctrl-txt" x="52" y="92">Relay pompa · LCD 16x2 · Buzzer</text>
+            <text class="ctrl-txt" x="52" y="74">ESP32-S3 + W5500 Ethernet</text>
+            <text class="ctrl-txt" x="52" y="92">LCD 16x2 · Buzzer</text>
             <text class="ctrl-txt" x="52" y="110">Logika alarm HH / H / L / LL</text>
             <path class="sig-net" d="M40 76 H 14"/>
             <text class="dwg-sub" x="14" y="66">ETH</text>
@@ -279,10 +277,6 @@
             <g class="bubble"><circle cx="610" cy="60" r="20"/><text x="610" y="57">LT</text><text x="610" y="70" class="bn">01</text></g>
             <text class="dwg-sub" x="610" y="30" text-anchor="middle">A02YYUW</text>
 
-            <line class="inst-conn" x1="690" y1="110" x2="690" y2="80"/>
-            <g class="bubble"><circle cx="690" cy="60" r="20"/><text x="690" y="57">LT</text><text x="690" y="70" class="bn">02</text></g>
-            <text class="dwg-sub" x="730" y="30" text-anchor="middle">JSN-SR04T</text>
-
             <line class="inst-conn" x1="740" y1="138" x2="770" y2="138"/>
             <g class="bubble" id="pidLsh"><circle cx="790" cy="138" r="20"/><text x="790" y="135">LSH</text><text x="790" y="148" class="bn">01</text></g>
             <text class="dwg-sub" x="790" y="174" text-anchor="middle">FLOAT SW</text>
@@ -316,10 +310,8 @@
           <table class="data-tbl">
             <thead><tr><th>Tag</th><th>Instrumen</th><th>Sinyal ke M-01</th></tr></thead>
             <tbody>
-              <tr><td class="mono">LT-01</td><td>Ultrasonik A02YYUW (utama)</td><td>UART · RX 22 / TX 21</td></tr>
-              <tr><td class="mono">LT-02</td><td>Ultrasonik JSN-SR04T (cadangan)</td><td>Trig 14 / Echo 13</td></tr>
-              <tr><td class="mono">LSH-01</td><td>Float switch high</td><td>DI · GPIO 27</td></tr>
-              <tr><td class="mono">P-01</td><td>Relay pompa pengisian</td><td>DO · GPIO 4</td></tr>
+              <tr><td class="mono">LT-01</td><td>Ultrasonik A02YYUW (utama)</td><td>UART · RX GPIO 17</td></tr>
+              <tr><td class="mono">LSH-01</td><td>Float switch high</td><td>DI · GPIO 4</td></tr>
               <tr><td class="mono">XA-01</td><td>Buzzer alarm</td><td>DO · (belum ditentukan)</td></tr>
               <tr><td class="mono">FIT-01</td><td>Flow transmitter (opsional)</td><td>—</td></tr>
             </tbody>
@@ -464,6 +456,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js?v=1"></script>
-<script src="js/app.js?v=18"></script>
+<script src="js/app.js?v=19"></script>
 </body>
 </html>

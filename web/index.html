@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=15">
+<link rel="stylesheet" href="css/style.css?v=16">
 </head>
 <body>
 
@@ -445,8 +445,8 @@
         </div>
       </div>
 
-      <!-- Simulator -->
-      <div class="panel sim" id="simPanel">
+      <!-- Simulator (disembunyikan; elemennya dipertahankan karena dipakai app.js) -->
+      <div class="panel sim" id="simPanel" hidden>
         <div class="panel-head"><h2>Simulasi</h2><span class="doc-no" id="simDocNo">DATA DUMMY · BELUM TERHUBUNG SUPABASE</span></div>
         <div class="sim-grid">
           <label class="sim-field" for="simLevel">
@@ -464,6 +464,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js?v=1"></script>
-<script src="js/app.js?v=15"></script>
+<script src="js/app.js?v=16"></script>
 </body>
 </html>

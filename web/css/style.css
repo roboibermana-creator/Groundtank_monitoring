@@ -442,6 +442,7 @@ button:focus-visible, input:focus-visible{ outline:2px solid var(--amber); outli
 
 /* simulator */
 .sim{ border-style:dashed; }
+.sim[hidden]{ display:none !important; }
 .sim.live{ opacity:.5; }
 .sim.live .sim-grid{ pointer-events:none; }
 .sim-grid{ display:flex; flex-wrap:wrap; gap:14px 28px; align-items:center; }

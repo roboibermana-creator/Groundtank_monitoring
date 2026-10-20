@@ -104,14 +104,16 @@
     if (simPanel) simPanel.classList.toggle("live", liveMode);
   }
 
-  function applyLiveReading(row) {
+  function applyLiveReading(row, stale) {
     var L = row.level_percent != null ? Number(row.level_percent) :
       Math.max(0, Math.min(100, 100 - ((Number(row.distance_cm) - SENSOR_OFFSET_CM) / TANK_H_CM) * 100));
     hasData = true;
+    state.stale = !!stale;
+    state.ts = new Date(row.created_at);
     state.level = Math.max(0, Math.min(100, L));
     state.filling = !!row.pump_filling;
     render();
-    sample();
+    if (!stale) sample();
   }
 
   function checkEsp32() {
@@ -130,6 +132,7 @@
           applyLiveReading(row);
         } else {
           esp32State = "offline"; liveMode = false;
+          applyLiveReading(row, true); // tetap tampilkan data terakhir yang diterima
         }
         renderEsp32();
       })
@@ -407,7 +410,7 @@
   // filling  : mode pengisian dipilih operator
   // silenced : operator menekan MATIKAN ALARM untuk kejadian alarm saat ini
   var hasData = false; // false sampai pembacaan asli pertama dari Supabase diterima
-  var state = { level: 50, filling: false, silenced: false };
+  var state = { stale: false, ts: null, level: 50, filling: false, silenced: false };
   var levelHistory = [];
   var lastCode = null;
 
@@ -422,7 +425,7 @@
       state.silenced = false; // alarm baru -> buzzer aktif lagi
       onStateChange(ev.code);
       lastCode = ev.code;
-      if (!firstRender) {
+      if (!firstRender && !state.stale) {
         var toastTag = (ALARM_DEF[ev.code] && ALARM_DEF[ev.code].tag) || "LT-01";
         showToast(ev.sev, toastTag, ev.text, ev.desc);
         notifySystem(ev.sev, toastTag, ev.text, ev.desc);
@@ -430,7 +433,7 @@
     }
     firstRender = false;
     var floatTrip = L >= FLOAT_TRIP;
-    var flow = state.filling ? 118 + Math.round(Math.sin(Date.now() / 1700) * 6) : 0;
+    var flow = state.filling && !state.stale ? 118 + Math.round(Math.sin(Date.now() / 1700) * 6) : 0;
     var vol = Math.round(CAPACITY_L * L / 100);
     var dist = SENSOR_OFFSET_CM + TANK_H_CM * (1 - L / 100);
     var buzzerOn = ev.blink && !state.silenced;
@@ -482,7 +485,7 @@
     $("kHeight").textContent = (TANK_H_CM * L / 100 / 100).toFixed(2);
     $("kVol").textContent = vol.toLocaleString("id-ID");
     $("kFlow").textContent = flow;
-    $("kUpd").textContent = hhmmss(new Date());
+    $("kUpd").textContent = state.ts ? hhmmss(state.ts) : "--";
     var pfdPump = $("pfdPump");
     if (pfdPump) pfdPump.setAttribute("href", ICON + (state.filling ? "pump_on.png" : "pump_off.png"));
     $("kvLsh").textContent = floatTrip ? "TRIP (penuh)" : "NORMAL";

@@ -2,7 +2,6 @@
   "use strict";
 
   // ---------- Plant constants ----------
-  var CAPACITY_L = 20000;
   var TANK_H_CM = 180;
   var SENSOR_OFFSET_CM = 30; // jarak sensor ke muka air saat 100% (sensor 30 cm di atas bibir tangki, sama dengan config.h)
   var SP = { HH: 90, H: 70, L: 30, LL: 10 };
@@ -434,7 +433,6 @@
     firstRender = false;
     var floatTrip = L >= FLOAT_TRIP;
     var flow = state.filling && !state.stale ? 118 + Math.round(Math.sin(Date.now() / 1700) * 6) : 0;
-    var vol = Math.round(CAPACITY_L * L / 100);
     var dist = SENSOR_OFFSET_CM + TANK_H_CM * (1 - L / 100);
     var buzzerOn = ev.blink && !state.silenced;
 
@@ -483,7 +481,6 @@
     $("kvFlow").textContent = flow + " L/min";
     $("kLevel").textContent = L.toFixed(1);
     $("kHeight").textContent = (TANK_H_CM * L / 100 / 100).toFixed(2);
-    $("kVol").textContent = vol.toLocaleString("id-ID");
     $("kFlow").textContent = flow;
     $("kUpd").textContent = state.ts ? hhmmss(state.ts) : "--";
     var pfdPump = $("pfdPump");
@@ -502,7 +499,7 @@
     $("pidBuzzer").classList.toggle("alarm-blink", buzzerOn);
 
     if (!hasData) {
-      ["rLevel", "rDist", "kLevel", "kHeight", "kVol", "kFlow", "kUpd", "pidLevelTxt", "kvFlow", "pidFlowTxt"]
+      ["rLevel", "rDist", "kLevel", "kHeight", "kFlow", "kUpd", "pidLevelTxt", "kvFlow", "pidFlowTxt"]
         .forEach(function (id) { var el = $(id); if (el) el.textContent = "--"; });
       $("rState").textContent = "TIDAK ADA DATA"; $("rState").className = "r-v r-state off";
       $("siState").textContent = "TIDAK ADA DATA"; $("siState").className = "si-state off";

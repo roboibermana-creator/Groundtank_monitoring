@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=21">
+<link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body>
 
@@ -76,7 +76,6 @@
         </div>
         <table class="tbk-table">
           <tr><th>Tag Tangki</th><td class="mono">TK-01</td></tr>
-          <tr><th>Kapasitas</th><td class="mono">20.000 L</td></tr>
           <tr><th>Tinggi efektif</th><td class="mono">180 cm</td></tr>
           <tr><th>Controller</th><td>ESP32-S3 + W5500</td></tr>
           <tr><th>Sensor level</th><td>A02YYUW</td></tr>
@@ -186,7 +185,7 @@
               <tr><td class="mono">P-01</td><td>Pompa pengisian</td><td>Dioperasikan manual, tidak dikontrol M-01</td></tr>
               <tr><td class="mono">CV-01</td><td>Check valve</td><td>Mencegah aliran balik ke pompa</td></tr>
               <tr><td class="mono">FI-01</td><td>Flow indicator</td><td>Laju alir pengisian (opsional)</td></tr>
-              <tr><td class="mono">TK-01</td><td>Ground tank</td><td>Penampung air, 20.000 L</td></tr>
+              <tr><td class="mono">TK-01</td><td>Ground tank</td><td>Penampung air</td></tr>
               <tr><td class="mono">V-02</td><td>Manual valve outlet</td><td>Isolasi jalur distribusi</td></tr>
               <tr><td class="mono">LI-01</td><td>Level indicator</td><td>Sensor ultrasonik, ditampilkan di HMI</td></tr>
               <tr><td class="mono">LSH-01</td><td>Level switch high</td><td>Float switch backup, GPIO 4</td></tr>
@@ -226,7 +225,7 @@
             <g id="pidSp"></g>
             <text class="live-val" id="pidLevelTxt" x="650" y="255" text-anchor="middle">--.- %</text>
             <text class="dwg-tag" x="650" y="412" text-anchor="middle">TK-01</text>
-            <text class="dwg-sub" x="650" y="426" text-anchor="middle">GROUND TANK · 20.000 L · H 180 cm</text>
+            <text class="dwg-sub" x="650" y="426" text-anchor="middle">GROUND TANK · H 180 cm</text>
 
             <!-- ===== Inlet / filling line ===== -->
             <text class="dwg-lbl" x="20" y="348">SUMBER AIR</text>
@@ -331,7 +330,6 @@
       <div class="kpi-strip">
         <div class="kpi"><img src="icons/clean/water_level.png" alt=""><div><span class="k-lbl">Level</span><span class="k-val"><b class="mono" id="kLevel">--.-</b> %</span></div></div>
         <div class="kpi"><img src="icons/clean/level_m.png" alt=""><div><span class="k-lbl">Tinggi air</span><span class="k-val"><b class="mono" id="kHeight">-.--</b> m</span></div></div>
-        <div class="kpi"><img src="icons/clean/volume.png" alt=""><div><span class="k-lbl">Volume</span><span class="k-val"><b class="mono" id="kVol">-----</b> L</span></div></div>
         <div class="kpi"><img src="icons/clean/inlet_flow.png" alt=""><div><span class="k-lbl">Laju alir masuk</span><span class="k-val"><b class="mono" id="kFlow">0</b> L/min</span></div></div>
         <div class="kpi"><img src="icons/clean/clock.png" alt=""><div><span class="k-lbl">Update terakhir</span><span class="k-val"><b class="mono" id="kUpd">--:--:--</b></span></div></div>
       </div>
@@ -455,6 +453,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js?v=1"></script>
-<script src="js/app.js?v=21"></script>
+<script src="js/app.js?v=22"></script>
 </body>
 </html>

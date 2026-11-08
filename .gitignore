@@ -1,2 +1,5 @@
 # PlatformIO build artifacts (besar, dibuat ulang otomatis tiap build, tidak perlu ikut di-commit)
 .pio/
+
+# Token perangkat (lihat include/secrets.h.example)
+include/secrets.h
